@@ -1,0 +1,129 @@
+body {
+    background-color: #e0f7f7;
+    font-family: 'Press Start 2P', sans-serif;
+    text-align: center;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.arcade-text {
+    font-size: 2rem;
+    margin: 20px 0;
+    color: #007f7f;
+}
+
+.step {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.step.active {
+    display: flex;
+}
+
+.action-button {
+    background-color: #00bfa5;
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.action-button:hover {
+    background-color: #007f7f;
+}
+
+.number-display {
+    font-size: 2rem;
+    background-color: #f0f0f0;
+    padding: 10px 20px;
+    margin: 20px auto;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+.number-pad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.num-button {
+    background-color: #00bfa5;
+    color: white;
+    border: none;
+    padding: 15px 20px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.timer-text {
+    font-size: 1.5rem;
+    margin-top: 20px;
+}
+
+#success-tick {
+    background: url('/images/tick.png') no-repeat center center;
+    background-size: contain;
+    width: 100px;
+    height: 100px;
+    margin: 20px auto;
+}
+
+#camera-preview {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    width: 300px; /* Adjust size */
+    height: 300px; /* Adjust size */
+    overflow: hidden;
+    border-radius: 10px;
+    border: 2px solid #00bfa5;
+}
+
+#camera-feed {
+    height: 120%; /* Take fit inside square */
+    object-fit: cover; /* Ensures the video fills the square */
+}
+
+/* Success Container */
+#success-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Tick Image */
+#success-tick {
+    /* width: 80px; /* Adjust size as needed */
+    /* height: 80px; */
+    display: block;
+}
+
+/* Error Message */
+.error-message {
+    color: red;
+    font-size: 1rem;
+    margin-top: 10px;
+    visibility: hidden; /* Hide by default */
+    text-align: center;
+}
+
+.error-message.visible {
+    visibility: visible;
+}
+

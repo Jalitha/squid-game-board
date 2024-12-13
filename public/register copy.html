@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Registration</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="step-1" class="step">
+        <h1 class="arcade-text">Next Player</h1>
+        <button id="start-button" class="action-button">Begin Registration</button>
+    </div>
+
+    <div id="step-2" class="step hidden">
+        <h1 class="arcade-text">Enter Your Number</h1>
+        <div id="number-display" class="number-display">---</div>
+        <div class="number-pad">
+            <button class="num-button">1</button>
+            <button class="num-button">2</button>
+            <button class="num-button">3</button>
+            <button class="num-button">4</button>
+            <button class="num-button">5</button>
+            <button class="num-button">6</button>
+            <button class="num-button">7</button>
+            <button class="num-button">8</button>
+            <button class="num-button">9</button>
+            <button id="clear-button" class="action-button small">Clear</button>
+            <button class="num-button">0</button>
+            <button id="submit-number" class="action-button small">Submit</button>
+        </div>
+    </div>
+
+    <div id="step-3" class="step hidden">
+        <h1 class="arcade-text">Smile for the Camera!</h1>
+        <div id="camera-preview"></div>
+        <p class="timer-text">Photo in <span id="countdown">5</span> seconds...</p>
+    </div>
+
+    <div id="step-4" class="step hidden">
+        <h1 class="arcade-text">Thank You, Registration Complete</h1>
+        <div id="success-tick"></div>
+        <p class="arcade-text smaller">Please proceed</p>
+    </div>
+
+    <script src="js/register.js"></script>
+</body>
+</html>
