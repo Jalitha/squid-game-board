@@ -1,0 +1,63 @@
+body {
+    background-color: black;
+}
+
+/* Full-screen grid container */
+#game-board {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Minimum size of 300px for squares */
+    gap: 20px; /* Space between player cards */
+    margin: 50px; /* Ensure a gap from screen edges */
+    box-sizing: border-box; /* Include padding in the container size */
+    height: calc(100vh - 100px); /* Subtract margin for full height */
+    width: calc(100vw - 100px); /* Subtract margin for full width */
+    justify-content: center; /* Center horizontally */
+    align-content: center; /* Center vertically */
+}
+
+
+/* Player card container (square cards) */
+.player-card {
+    position: relative;
+    width: 100%; /* Fill grid cell */
+    aspect-ratio: 1 / 1; /* Maintain square aspect ratio */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #222;
+    border: 2px solid #00bfa5;
+    border-radius: 5px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.player-card:hover {
+    transform: scale(1.05); /* Slight zoom on hover */
+}
+
+/* Player photo */
+.player-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: filter 0.2s, opacity 0.2s;
+}
+
+/* Greyscale effect for eliminated players */
+.player-card.eliminated .player-photo {
+    filter: grayscale(100%);
+    opacity: 0.6;
+}
+
+/* Player number */
+.player-number {
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 1.2rem; /* Larger font for better visibility */
+    color: white;
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    padding: 10px 0;
+}

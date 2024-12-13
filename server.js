@@ -3,6 +3,9 @@ const bodyParser = require('body-parser');
 const fs = require('fs'); // File system module
 const path = require('path');
 
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 8080 }); // Create a WebSocket server
+
 const app = express();
 const PORT = 3000;
 
@@ -15,6 +18,8 @@ app.use(bodyParser.json({ limit: '10mb' })); // Increase the limit for larger im
 app.use(express.static(path.join(__dirname, 'public')));
 
 let registeredNumbers = []; // Store registered numbers temporarily
+const players = []; // In-memory player data
+
 
 // API Endpoint for registration
 app.post('/api/register', (req, res) => {
@@ -27,6 +32,10 @@ app.post('/api/register', (req, res) => {
 
     // Add the number to the registered list
     registeredNumbers.push(number);
+
+    // Save player data
+    players.push({ number, photo, status: 'active' });
+    broadcastPlayers(); // Notify clients of the updated player list
 
     // Decode and save the photo
     const photoBuffer = Buffer.from(photo.split(',')[1], 'base64');
@@ -51,6 +60,36 @@ app.get('/api/check-number/:number', (req, res) => {
     }
     res.json({ isRegistered: false });
 });
+
+// Get all players
+app.get('/api/players', (req, res) => {
+    res.json(players);
+});
+
+
+// Mark a player as eliminated
+app.post('/api/eliminate', (req, res) => {
+    const { number } = req.body;
+    const player = players.find((p) => p.number === number);
+
+    if (player) {
+        player.status = 'eliminated';
+        res.json({ success: true });
+    } else {
+        res.status(404).json({ success: false, message: 'Player not found' });
+    }
+});
+
+// Broadcast function to send updates to all clients
+function broadcastPlayers() {
+    const playerData = JSON.stringify(players);
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(playerData);
+        }
+    });
+}
+
 
 // Start the server
 app.listen(PORT, () => {

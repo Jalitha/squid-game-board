@@ -62,7 +62,7 @@ function startCamera() {
             video.srcObject = stream; // Attach the stream to the video element
             video.play();
 
-            let countdown = 5;
+            let countdown = 1;
             const interval = setInterval(() => {
                 countdown--;
                 countdownElement.textContent = countdown;
