@@ -46,18 +46,16 @@ function toggleElimination(playerNumber) {
         body: JSON.stringify({ number: playerNumber }),
     });
 
-    updatePlayers(); // Refresh the grid
+    fetchPlayers(); // Refresh the grid
 }
 
 // Function to render players
 function renderPlayers(players) {
     gameBoard.innerHTML = ''; // Clear the existing grid
     players.forEach((player) => {
-        const card = createPlayerCard(player);
+        let card = createPlayerCard(player);
         gameBoard.appendChild(card);
     });
-
-    // Ensure proper resizing and centering after rendering
     resizeGameBoard();
 }
 
@@ -78,48 +76,40 @@ ws.onmessage = (event) => {
     renderPlayers(players);
 };
 
-// Function to resize the game board
 function resizeGameBoard() {
-    const margin = 50; // Match the CSS margin
+    const gameBoard = document.getElementById('game-board');
     const gap = 20; // Match the CSS gap
-    const viewportWidth = window.innerWidth - margin * 2;
+    const margin = 50; // Match the CSS margin
     const viewportHeight = window.innerHeight - margin * 2;
 
-    // Estimate the optimal number of columns based on viewport width
-    const columns = Math.floor((viewportWidth + gap) / (300 + gap)); // 300 is the minimum size
-    const cardSize = (viewportWidth - (columns - 1) * gap) / columns;
+    let cardSize = 350; // Start with the initial size
+    const minCardSize = 30; // Set a minimum size
 
-    // Set grid styles dynamically
-    gameBoard.style.gridTemplateColumns = `repeat(${columns}, ${cardSize}px)`;
-    gameBoard.style.gridAutoRows = `${cardSize}px`; // Ensure rows match column height
+    // Apply size and measure the actual height
+    const applyCardSize = (size) => {
+        gameBoard.style.setProperty('--card-size', `${size}px`);
+    };
 
-    // Center align the game board content
-    const totalRows = Math.ceil(gameBoard.childElementCount / columns);
-    const totalHeight = totalRows * (cardSize + gap) - gap;
+    // Check if the game board fits within the viewport
+    const exceedsViewport = () => {
+        return gameBoard.scrollHeight > viewportHeight;
+    };
 
-    if (totalHeight < viewportHeight) {
-        gameBoard.style.alignContent = 'center'; // Center vertically
-    } else {
-        gameBoard.style.alignContent = 'start'; // Default to top-alignment if it overflows
+    // Adjust size iteratively
+    applyCardSize(cardSize);
+    while (cardSize > minCardSize && exceedsViewport()) {
+        cardSize -= 10; // Decrease size step-by-step
+        applyCardSize(cardSize);
     }
 }
 
-// Initialize game board resizing and listeners
+// Call resizeGameBoard on load and resize events
+window.addEventListener('resize', resizeGameBoard);
+
+// Initialize game board
 function initializeGameBoard() {
-    resizeGameBoard(); // Resize when the page loads
-
-    // Resize dynamically when the window size changes
-    window.addEventListener('resize', resizeGameBoard);
-
-    // Recalculate grid size after new players are added
-    const observer = new MutationObserver(() => {
-        resizeGameBoard();
-    });
-    observer.observe(gameBoard, { childList: true });
+    fetchPlayers(); // Fetch players on load
 }
 
-// Initial setup
-window.addEventListener('load', () => {
-    fetchPlayers(); // Fetch players on load
-    initializeGameBoard(); // Initialize resizing and centering logic
-});
+// Call initialize function on page load
+window.addEventListener('load', initializeGameBoard);

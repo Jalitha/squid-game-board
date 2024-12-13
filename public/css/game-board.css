@@ -1,25 +1,24 @@
 body {
     background-color: black;
 }
-
-/* Full-screen grid container */
+/* Full-screen flex container */
 #game-board {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Minimum size of 300px for squares */
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping of player cards */
+    justify-content: center; /* Center horizontally */
+    align-content: center; /* Center vertically when wrapping */
     gap: 20px; /* Space between player cards */
     margin: 50px; /* Ensure a gap from screen edges */
     box-sizing: border-box; /* Include padding in the container size */
     height: calc(100vh - 100px); /* Subtract margin for full height */
     width: calc(100vw - 100px); /* Subtract margin for full width */
-    justify-content: center; /* Center horizontally */
-    align-content: center; /* Center vertically */
+    background-color: black;
 }
-
 
 /* Player card container (square cards) */
 .player-card {
-    position: relative;
-    width: 100%; /* Fill grid cell */
+    flex: 0 1 var(--card-size); /* Use dynamic card size */
+    max-width: var(--card-size); /* Prevent cards from growing too large */
     aspect-ratio: 1 / 1; /* Maintain square aspect ratio */
     display: flex;
     flex-direction: column;
@@ -54,7 +53,7 @@ body {
 /* Player number */
 .player-number {
     font-family: 'Press Start 2P', sans-serif;
-    font-size: 1.2rem; /* Larger font for better visibility */
+    font-size: calc(var(--card-size) / 10); /* Make font size proportional to card size */
     color: white;
     text-align: center;
     background-color: rgba(0, 0, 0, 0.8);
