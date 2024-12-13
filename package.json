@@ -1,0 +1,15 @@
+{
+  "name": "squid-game-board",
+  "version": "1.0.0",
+  "description": "A little project for a party where a board is displayed similarly to the TV show Squid Game. Guests are registered and eliminated.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
