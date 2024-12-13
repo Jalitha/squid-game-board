@@ -56,19 +56,20 @@ document.getElementById('clear-button').addEventListener('click', () => {
 function startCamera() {
     const video = document.getElementById('camera-feed'); // Use the video element
     const countdownElement = document.getElementById('countdown');
-
+    countdownElement.textContent = 5;  
     navigator.mediaDevices.getUserMedia({ video: true })
         .then((stream) => {
             video.srcObject = stream; // Attach the stream to the video element
             video.play();
 
-            let countdown = 1;
+            let countdown = 5;
             const interval = setInterval(() => {
                 countdown--;
                 countdownElement.textContent = countdown;
                 if (countdown === 0) {
                     clearInterval(interval);
-                    takePhoto(video, stream); // Pass the video and stream to the photo function
+                    takePhoto(video, stream); // Pass the video and stream to the photo function    
+                    countdownElement.textContent = 5;   
                 }
             }, 1000);
         })
