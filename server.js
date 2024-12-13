@@ -69,11 +69,15 @@ app.get('/api/players', (req, res) => {
 
 // Mark a player as eliminated
 app.post('/api/eliminate', (req, res) => {
-    const { number } = req.body;
+    const { number, reverse } = req.body;
     const player = players.find((p) => p.number === number);
 
     if (player) {
-        player.status = 'eliminated';
+        if (reverse) {
+            player.status = 'active'
+        } else {
+            player.status = 'eliminated';
+        }
         res.json({ success: true });
     } else {
         res.status(404).json({ success: false, message: 'Player not found' });

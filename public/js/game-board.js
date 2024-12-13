@@ -8,6 +8,7 @@ function createPlayerCard(player) {
     card.classList.add('player-card');
     if (player.status === 'eliminated' || eliminatedPlayers.has(player.number)) {
         card.classList.add('eliminated');
+        eliminatedPlayers.add(player.number);
     }
 
     const photo = document.createElement('img');
@@ -33,7 +34,9 @@ function createPlayerCard(player) {
 // Function to toggle player elimination
 function toggleElimination(playerNumber) {
     // Toggle elimination status
+    let reverseElimination = false;
     if (eliminatedPlayers.has(playerNumber)) {
+        reverseElimination = true
         eliminatedPlayers.delete(playerNumber);
     } else {
         eliminatedPlayers.add(playerNumber);
@@ -43,7 +46,7 @@ function toggleElimination(playerNumber) {
     fetch('/api/eliminate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ number: playerNumber }),
+        body: JSON.stringify({ number: playerNumber, reverse: reverseElimination }),
     });
 
     fetchPlayers(); // Refresh the grid
