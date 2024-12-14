@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
+    <audio id="gunshot-sound" src="gunshot.wav" preload="auto"></audio>
+    <audio id="elimination-sound" src="eliminated.wav" preload="auto"></audio>
     <style>
         body {
             font-family: 'Press Start 2P', sans-serif;
@@ -98,6 +100,7 @@
         }
 
         // Function to toggle player elimination
+        // Function to toggle player elimination
         function toggleElimination(player, card) {
             const reverseElimination = player.status === 'eliminated';
 
@@ -111,12 +114,29 @@
                     if (res.ok) {
                         player.status = reverseElimination ? 'active' : 'eliminated';
                         card.classList.toggle('eliminated', player.status === 'eliminated');
+
+                        // Play sound effects in sequence if eliminated
+                        if (player.status === 'eliminated') {
+                            const gunshot = document.getElementById('gunshot-sound');
+                            const eliminated = document.getElementById('elimination-sound');
+
+                            // Play gunshot first
+                            gunshot.currentTime = 0; // Reset to start
+                            gunshot.play();
+
+                            // Play eliminated sound after 1 second
+                            setTimeout(() => {
+                                eliminated.currentTime = 0; // Reset to start
+                                eliminated.play();
+                            }, 1000); // 1000ms = 1 second delay
+                        }
                     } else {
                         console.error('Failed to toggle elimination.');
                     }
                 })
                 .catch((error) => console.error('Error toggling elimination:', error));
         }
+
 
         // Fetch players and render the admin panel
         async function fetchPlayers() {
