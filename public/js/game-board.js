@@ -73,11 +73,14 @@ async function fetchPlayers() {
     }
 }
 
-// Real-time updates from WebSocket
-ws.onmessage = (event) => {
-    const players = JSON.parse(event.data);
-    renderPlayers(players);
-};
+// Fetch and update players every 10 seconds
+setInterval(fetchPlayers, 1000);
+
+// // Real-time updates from WebSocket
+// ws.onmessage = (event) => {
+//     const players = JSON.parse(event.data);
+//     renderPlayers(players);
+// };
 
 function resizeGameBoard() {
     const gameBoard = document.getElementById('game-board');
