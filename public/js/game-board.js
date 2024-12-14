@@ -1,14 +1,15 @@
 const gameBoard = document.getElementById('game-board');
 const ws = new WebSocket('ws://localhost:8080'); // Connect to WebSocket server
-const eliminatedPlayers = new Set(); // Track eliminated players locally
+// const eliminatedPlayers = new Set(); // Track eliminated players locally
 
 // Function to create a player card
 function createPlayerCard(player) {
     const card = document.createElement('div');
     card.classList.add('player-card');
-    if (player.status === 'eliminated' || eliminatedPlayers.has(player.number)) {
+    card.id = player.number; 
+    if (player.status === 'eliminated') {
         card.classList.add('eliminated');
-        eliminatedPlayers.add(player.number);
+        // eliminatedPlayers.add(player.number);
     }
 
     const photo = document.createElement('img');
@@ -33,13 +34,18 @@ function createPlayerCard(player) {
 
 // Function to toggle player elimination
 function toggleElimination(playerNumber) {
+    
+    let card = document.getElementById(playerNumber);
+    console.log(card);
+    let currentlyEliminated = card.classList.contains('eliminated');  
+
     // Toggle elimination status
     let reverseElimination = false;
-    if (eliminatedPlayers.has(playerNumber)) {
+    if (currentlyEliminated) {
         reverseElimination = true
-        eliminatedPlayers.delete(playerNumber);
+        // eliminatedPlayers.delete(playerNumber);
     } else {
-        eliminatedPlayers.add(playerNumber);
+        // eliminatedPlayers.add(playerNumber);
     }
 
     // Update the server with elimination status (optional)

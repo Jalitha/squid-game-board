@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <style>
+        body {
+            font-family: 'Press Start 2P', sans-serif;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            color: #00bfa5;
+            margin: 20px 0;
+        }
+
+        #admin-board {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            width: calc(100vw - 40px);
+            box-sizing: border-box;
+        }
+
+        .player-card {
+            position: relative;
+            background-color: #222;
+            border: 2px solid #00bfa5;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .player-card:hover {
+            transform: scale(1.05);
+        }
+
+        .player-card.eliminated {
+            border-color: red;
+            opacity: 0.6;
+        }
+
+        .player-photo {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .player-number {
+            text-align: center;
+            font-size: 1.2rem;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+    <div id="admin-board"></div>
+
+    <script>
+        const adminBoard = document.getElementById('admin-board');
+
+        // Function to create a player card
+        function createPlayerCard(player) {
+            const card = document.createElement('div');
+            card.classList.add('player-card');
+            if (player.status === 'eliminated') {
+                card.classList.add('eliminated');
+            }
+
+            const photo = document.createElement('img');
+            photo.src = player.photo;
+            photo.alt = `Player ${player.number}`;
+            photo.classList.add('player-photo');
+
+            const number = document.createElement('div');
+            number.textContent = player.number;
+            number.classList.add('player-number');
+
+            card.appendChild(photo);
+            card.appendChild(number);
+
+            // Toggle elimination when clicking the card
+            card.addEventListener('click', () => toggleElimination(player, card));
+
+            return card;
+        }
+
+        // Function to toggle player elimination
+        function toggleElimination(player, card) {
+            const reverseElimination = player.status === 'eliminated';
+
+            // Update the server with elimination status
+            fetch('/api/eliminate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ number: player.number, reverse: reverseElimination }),
+            })
+                .then((res) => {
+                    if (res.ok) {
+                        player.status = reverseElimination ? 'active' : 'eliminated';
+                        card.classList.toggle('eliminated', player.status === 'eliminated');
+                    } else {
+                        console.error('Failed to toggle elimination.');
+                    }
+                })
+                .catch((error) => console.error('Error toggling elimination:', error));
+        }
+
+        // Fetch players and render the admin panel
+        async function fetchPlayers() {
+            try {
+                const response = await fetch('/api/players');
+                const players = await response.json();
+                renderAdminBoard(players);
+            } catch (error) {
+                console.error('Error fetching players:', error);
+            }
+        }
+
+        // Render players on the admin board
+        function renderAdminBoard(players) {
+            adminBoard.innerHTML = ''; // Clear the board
+            players.forEach((player) => {
+                const card = createPlayerCard(player);
+                adminBoard.appendChild(card);
+            });
+        }
+
+        // Fetch players when the page loads
+        fetchPlayers();
+        // Periodically refresh the admin panel every 10 seconds
+        setInterval(fetchPlayers, 10000);
+    </script>
+</body>
+</html>
